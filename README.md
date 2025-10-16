@@ -1,7 +1,7 @@
 # GymSync - Tu Compañero de Gimnasio
 
 ### Información del Estudiante
-- **Nombre**: Cristhian [Tu Apellido]
+- **Nombre**: Cristhian Aguilar Cerna
 - **Curso**: [ I, III-25, P-02]
 - **Profesor**: Ever Barahona Mendoza
 
