@@ -1,6 +1,6 @@
 # GymSync - Tu Compañero de Gimnasio
 
-### Información del Estudiante
+
 - **Nombre**: Cristhian Aguilar Cerna
 - **Curso**: [ I, III-25, P-02]
 - **Profesor**: Ever Barahona Mendoza
@@ -8,7 +8,7 @@
 ### Descripción del Proyecto
 GymSync es una aplicación para Android pensada para el cliente del gimnasio. El objetivo es que el usuario pueda consultar su rutina diaria, registrar sus avances, ver su progreso en fotos y gestionar su membresía, todo desde el celular.
 
-### Funcionalidades para el Usuario
+### Funcionalidades del Usuario
 
 **Requisitos Técnicos:**
 - **CRUD:** El usuario podrá gestionar su galería de fotos de progreso, añadiendo nuevas fotos (Crear), viéndolas (Leer), actualizando notas (Actualizar) y eliminando fotos antiguas (Borrar).
@@ -27,7 +27,7 @@ GymSync es una aplicación para Android pensada para el cliente del gimnasio. El
 ### Mockups 
 
 - **Pantalla Principal ("Mi Plan de Hoy"):**
-  [        ]
+ ![Diseño de la pantalla principal](mockups/pantalla_principal.png)
 
 - **Pantalla de Perfil y Pagos:**
   [          ]
