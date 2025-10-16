@@ -27,7 +27,7 @@ GymSync es una aplicación para Android pensada para el cliente del gimnasio. El
 ### Mockups 
 
 - **Pantalla Principal ("Mi Plan de Hoy"):**
-![Diseño de la pantalla principal](mockups/pantalla_principal.png)
+![Diseño de la pantalla principal](mockups/pantalla_principal.jpg)
 
 - **Pantalla de Perfil y Pagos:**
   [          ]
