@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      android:id="@+id/main"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/background_dark"
+      tools:context=".ProfileActivity">
+
+      <ScrollView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="16dp">
+
+              <!-- Header with Purple Background -->
+              <androidx.cardview.widget.CardView
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  app:cardBackgroundColor="@color/purple_primary"
+                  app:cardCornerRadius="16dp"
+                  app:cardElevation="4dp">
+
+                  <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:orientation="vertical"
+                      android:padding="24dp">
+
+                      <!-- Profile Avatar -->
+                      <ImageView
+                          android:id="@+id/imageViewAvatar"
+                          android:layout_width="100dp"
+                          android:layout_height="100dp"
+                          android:background="@color/white"
+                          android:contentDescription="@string/content_description_profile_photo"
+                          android:src="@android:drawable/ic_menu_gallery" />
+
+                      <!-- Username -->
+                      <TextView
+                          android:id="@+id/textViewUsername"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="16dp"
+                          android:text="@string/user"
+                          tools:text="John Doe"
+                          android:textColor="@color/white"
+                          android:textSize="24sp"
+                          android:textStyle="bold" />
+
+                      <!-- Edit Profile Button -->
+                      <Button
+                          android:id="@+id/buttonEditProfile"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="12dp"
+                          android:backgroundTint="@color/purple_dark"
+                          android:text="@string/edit_profile"
+                          android:textColor="@color/white" />
+                  </LinearLayout>
+              </androidx.cardview.widget.CardView>
+
+              <!-- Email Section -->
+              <TextView
+                  android:id="@+id/textViewEmail"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="24dp"
+                  android:text="usuario@gymsync.com"
+                  android:textColor="@color/text_secondary"
+                  android:textSize="16sp" />
+
+              <!-- Membership Status Card -->
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="32dp"
+                  android:text="@string/membership_status_title"
+                  android:textColor="@color/text_primary"
+                  android:textSize="20sp"
+                  android:textStyle="bold" />
+
+              <androidx.cardview.widget.CardView
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="12dp"
+                  app:cardBackgroundColor="@color/background_card"
+                  app:cardCornerRadius="16dp"
+                  app:cardElevation="2dp">
+
+                  <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:padding="20dp">
+
+                      <!-- Status Active -->
+                      <LinearLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:gravity="center_vertical"
+                          android:orientation="horizontal">
+
+                          <TextView
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="✓"
+                              android:textColor="@color/green_success"
+                              android:textSize="24sp"
+                              android:textStyle="bold" />
+
+                          <TextView
+                              android:id="@+id/textViewMembershipStatus"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:layout_marginStart="8dp"
+                              android:text="@string/membership_active"
+                              android:textColor="@color/green_success"
+                              android:textSize="18sp"
+                              android:textStyle="bold" />
+                      </LinearLayout>
+
+                      <!-- Expires In -->
+                      <TextView
+                          android:id="@+id/textViewExpiresIn"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="8dp"
+                          android:text="Expires in 30 days"
+                          android:textColor="@color/text_secondary"
+                          android:textSize="14sp" />
+
+                      <!-- Expiration Date -->
+                      <TextView
+                          android:id="@+id/textViewExpirationDate"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="4dp"
+                          android:text="Expiration date: November 15, 2025"
+                          android:textColor="@color/text_secondary"
+                          android:textSize="14sp" />
+
+                      <!-- Renew Button -->
+                      <Button
+                          android:id="@+id/buttonRenewMembership"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="16dp"
+                          android:backgroundTint="@color/orange_accent"
+                          android:text="@string/renew_membership"
+                          android:textColor="@color/white" />
+                  </LinearLayout>
+              </androidx.cardview.widget.CardView>
+
+          </LinearLayout>
+      </ScrollView>
+
+  </androidx.constraintlayout.widget.ConstraintLayout>

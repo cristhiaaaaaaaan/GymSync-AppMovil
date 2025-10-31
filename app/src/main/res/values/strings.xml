@@ -1,8 +1,94 @@
 <resources>
-    <string name="app_name">census</string>
-    <string name="ErrorMsgAdd">Error al agregar el dato</string>
-    <string name="ErrorMsgUpdate">Error al modificar el dato</string>
-    <string name="ErrorMsgRemove">Error al eliminar el dato</string>
-    <string name="ErrorMsgGetAll">Error al obtener la lista de datos</string>
-    <string name="ErrorMsgGetById">Error al optener el dato especifico</string>
+    <!-- App Name -->
+    <string name="app_name">GymSync</string>
+
+    <!-- Common Strings -->
+    <string name="email">Email</string>
+    <string name="user">User</string>
+    <string name="loading">Loading…</string>
+
+    <!-- Workout Activity (Mi Plan de Hoy) -->
+    <string name="workout_title">Today</string>
+    <string name="greeting_hello">Hello, %1$s!</string>
+    <string name="workout_progress_today">Today\'s Progress</string>
+    <string name="workout_progress_format">%1$d/%2$d</string>
+    <string name="exercises_title">Exercises</string>
+    <string name="series_label">series</string>
+    <string name="reps_label">reps</string>
+    <string name="kg_label">kg</string>
+    <string name="exercise_start">Start</string>
+    <string name="exercise_complete">Complete</string>
+    <string name="no_exercises">No exercises for today</string>
+    <string name="streak_days">%1$d day streak</string>
+
+    <!-- Profile Activity (Perfil y Pagos) -->
+    <string name="profile_title">Profile</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="membership_status_title">Membership Status</string>
+    <string name="membership_active">Active</string>
+    <string name="membership_inactive">Inactive</string>
+    <string name="membership_expires_in">Expires in %1$d days</string>
+    <string name="membership_expiration_date">Expiration date: %1$s</string>
+    <string name="renew_membership">Renew Membership</string>
+    <string name="membership_type">Membership Type</string>
+    <string name="membership_monthly">Monthly</string>
+    <string name="membership_annual">Annual</string>
+
+    <!-- Progress Gallery Activity (Galería de Progreso) -->
+    <string name="progress_title">Progress</string>
+    <string name="progress_gallery_title">My Photo Progress</string>
+    <string name="progress_photos_count">%1$d photos</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="gallery">Gallery</string>
+    <string name="no_photos_yet">No photos yet</string>
+    <string name="start_documenting">Start documenting your progress by taking your first photo</string>
+    <string name="add_note">Add note</string>
+    <string name="photo_saved">Photo saved successfully</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_today">Today</string>
+    <string name="nav_routine">Routine</string>
+    <string name="nav_progress">Progress</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- Toast Messages -->
+    <string name="toast_profile_updated">Profile updated successfully</string>
+    <string name="toast_membership_renewed">Membership renewed successfully</string>
+    <string name="toast_exercise_completed">Exercise completed!</string>
+    <string name="toast_workout_completed">Workout completed! Great job!</string>
+    <string name="toast_error">Error: %1$s</string>
+    <string name="toast_photo_deleted">Photo deleted</string>
+    <string name="toast_note_saved">Note saved</string>
+
+    <!-- Error Messages -->
+    <string name="error_add_data">Error adding data</string>
+    <string name="error_update_data">Error updating data</string>
+    <string name="error_delete_data">Error deleting data</string>
+    <string name="error_get_all_data">Error retrieving data list</string>
+    <string name="error_get_by_id">Error retrieving specific data</string>
+    <string name="error_load_image">Error loading image</string>
+    <string name="error_camera_permission">Camera permission required</string>
+    <string name="error_storage_permission">Storage permission required</string>
+    <string name="error_network">Network error</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_confirm">Confirm</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_delete">Delete</string>
+    <string name="dialog_save">Save</string>
+    <string name="dialog_delete_photo_title">Delete photo?</string>
+    <string name="dialog_delete_photo_message">This action cannot be undone</string>
+
+    <!-- Accessibility -->
+    <string name="content_description_profile_photo">Profile photo</string>
+    <string name="content_description_progress_photo">Progress photo</string>
+    <string name="content_description_back_button">Back</string>
+    <string name="content_description_camera_icon">Camera icon</string>
+
+    <!-- Strings from values-en/strings.xml -->
+    <string name="ErrorMsgAdd">Error when adding the data.</string>
+    <string name="ErrorMsgUpdate">Error when updating the data.</string>
+    <string name="ErrorMsgRemove">Error when removing the data .</string>
+    <string name="ErrorMsgGetAll">Error when getting all  data .</string>
+    <string name="ErrorMsgGetById">Error when trying to get the specific data .</string>
 </resources>
