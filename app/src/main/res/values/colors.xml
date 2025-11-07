@@ -2,4 +2,22 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- GymSync Theme Colors -->
+    <color name="purple_primary">#7C4DFF</color>
+    <color name="purple_dark">#6A3DE8</color>
+    <color name="purple_light">#9575FF</color>
+    <color name="blue_accent">#5E92F3</color>
+    <color name="orange_accent">#FF9500</color>
+    <color name="green_success">#4CAF50</color>
+
+    <!-- Background Colors -->
+    <color name="background_dark">#1A1A2E</color>
+    <color name="background_card">#252A41</color>
+    <color name="background_light">#2D3250</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B0B0B0</color>
+    <color name="text_tertiary">#808080</color>
 </resources>
