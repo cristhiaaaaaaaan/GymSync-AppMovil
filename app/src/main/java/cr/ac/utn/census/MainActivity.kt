@@ -1,6 +1,8 @@
 package cr.ac.utn.census
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -36,6 +38,17 @@ class MainActivity : AppCompatActivity() {
 
         // Cargar datos de prueba
         loadTestData()
+
+        // Setup button to launch Exercise CRUD Activity
+        setupExerciseManagementButton()
+    }
+
+    private fun setupExerciseManagementButton() {
+        val buttonManageExercises = findViewById<Button>(R.id.buttonManageExercises)
+        buttonManageExercises.setOnClickListener {
+            val intent = Intent(this, ExerciseCrudActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun initControllers() {

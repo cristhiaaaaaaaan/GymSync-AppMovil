@@ -50,4 +50,12 @@ class EjercicioController {
             throw Exception(context.getString(R.string.ErrorMsgGetById))
         }
     }
+
+    fun deleteEjercicio(id: String) {
+        try {
+            dataManager.removeEjercicio(id)
+        } catch (e: Exception) {
+            throw Exception(context.getString(R.string.ErrorMsgRemove))
+        }
+    }
 }

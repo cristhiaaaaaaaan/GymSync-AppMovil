@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Census">
         <activity
+            android:name=".ExerciseCrudActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProgressGalleryActivity"
             android:exported="false" />
         <activity
