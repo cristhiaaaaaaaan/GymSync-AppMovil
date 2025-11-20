@@ -1,5 +1,6 @@
 package Entity
 
+import android.graphics.Bitmap
 import java.util.Date
 
 // Rutina de ejercicios
@@ -143,21 +144,21 @@ class RegistroAvance {
         set(value) { this.seriesCompletadas = value }
 }
 
-// Foto de Progreso
+// Progress Photo
 class FotoProgreso {
     private var id: String = ""
     private var usuarioId: String = ""
     private lateinit var fecha: Date
-    private var urlFoto: String = ""
+    private var photo: Bitmap? = null
     private var nota: String = ""
 
     constructor()
 
-    constructor(id: String, usuarioId: String, fecha: Date, urlFoto: String, nota: String) {
+    constructor(id: String, usuarioId: String, fecha: Date, photo: Bitmap?, nota: String) {
         this.id = id
         this.usuarioId = usuarioId
         this.fecha = fecha
-        this.urlFoto = urlFoto
+        this.photo = photo
         this.nota = nota
     }
 
@@ -173,9 +174,9 @@ class FotoProgreso {
         get() = this.fecha
         set(value) { this.fecha = value }
 
-    var UrlFoto: String
-        get() = this.urlFoto
-        set(value) { this.urlFoto = value }
+    var Photo: Bitmap?
+        get() = this.photo
+        set(value) { this.photo = value }
 
     var Nota: String
         get() = this.nota

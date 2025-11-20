@@ -117,4 +117,14 @@
     <string name="exercise_updated_successfully">Exercise updated successfully</string>
     <string name="exercise_deleted_successfully">Exercise deleted successfully</string>
     <string name="exercise_validation_error">Please fill all required fields</string>
+
+    <!-- Progress Photo Activity -->
+    <string name="progress_photo_title">Add Progress Photo</string>
+    <string name="progress_photo_note">Note</string>
+    <string name="progress_photo_note_hint">Enter a note for this photo...</string>
+    <string name="progress_photo_saved">Progress photo saved successfully</string>
+    <string name="progress_photo_select_image">Please select an image first</string>
+    <string name="progress_photo_list_title">Progress Photo List</string>
+    <string name="progress_photo_add">Add Progress Photo</string>
+    <string name="progress_photo_view_list">View Photo List</string>
 </resources>
