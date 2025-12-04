@@ -1,6 +1,6 @@
 package Controller
 
-import Data.MemoryDataManager
+import Data.ApiDataManager
 import Data.iDataManager
 import Entity.Membresia
 import android.content.Context
@@ -8,7 +8,7 @@ import cr.ac.utn.census.R
 
 class MembresiaController {
 
-    private var dataManager: iDataManager = MemoryDataManager
+    private var dataManager: iDataManager = ApiDataManager
     private var context: Context
 
     constructor(context: Context) {
