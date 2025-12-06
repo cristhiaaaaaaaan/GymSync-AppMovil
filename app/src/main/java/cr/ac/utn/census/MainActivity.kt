@@ -39,14 +39,29 @@ class MainActivity : AppCompatActivity() {
         // Cargar datos de prueba
         loadTestData()
 
-        // Setup button to launch Exercise CRUD Activity
-        setupExerciseManagementButton()
+        // Setup navigation buttons
+        setupNavigationButtons()
     }
 
-    private fun setupExerciseManagementButton() {
+    private fun setupNavigationButtons() {
+        // Exercise Management button
         val buttonManageExercises = findViewById<Button>(R.id.buttonManageExercises)
         buttonManageExercises.setOnClickListener {
             val intent = Intent(this, ExerciseCrudActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Add Progress Photo button
+        val buttonAddProgressPhoto = findViewById<Button>(R.id.buttonAddProgressPhoto)
+        buttonAddProgressPhoto.setOnClickListener {
+            val intent = Intent(this, ProgressPhotoActivity::class.java)
+            startActivity(intent)
+        }
+
+        // View Photo List button
+        val buttonViewPhotoList = findViewById<Button>(R.id.buttonViewPhotoList)
+        buttonViewPhotoList.setOnClickListener {
+            val intent = Intent(this, ProgressPhotoListActivity::class.java)
             startActivity(intent)
         }
     }
@@ -144,13 +159,13 @@ class MainActivity : AppCompatActivity() {
         )
         registroAvanceController.addRegistroAvance(registroAvance)
 
-        // Crear foto de progreso de prueba
+        // Create test progress photo (with null bitmap for now)
         val fotoProgreso = FotoProgreso(
             id = Util.generateId(),
             usuarioId = usuario.Id,
             fecha = Util.getCurrentDate(),
-            urlFoto = "https://example.com/progreso1.jpg",
-            nota = "Primera foto de progreso"
+            photo = null,
+            nota = "First progress photo"
         )
         fotoProgresoController.addFotoProgreso(fotoProgreso)
 
