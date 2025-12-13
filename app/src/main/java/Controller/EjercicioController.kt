@@ -15,7 +15,7 @@ class EjercicioController {
         this.context = context
     }
 
-    fun addEjercicio(ejercicio: Ejercicio) {
+    suspend fun addEjercicio(ejercicio: Ejercicio) {
         try {
             dataManager.addEjercicio(ejercicio)
         } catch (e: Exception) {
@@ -23,7 +23,7 @@ class EjercicioController {
         }
     }
 
-    fun updateEjercicio(ejercicio: Ejercicio) {
+    suspend fun updateEjercicio(ejercicio: Ejercicio) {
         try {
             dataManager.updateEjercicio(ejercicio)
         } catch (e: Exception) {
@@ -31,7 +31,7 @@ class EjercicioController {
         }
     }
 
-    fun getEjercicios(): List<Ejercicio> {
+    suspend fun getEjercicios(): List<Ejercicio> {
         try {
             return dataManager.getAllEjercicios()
         } catch (e: Exception) {
@@ -39,7 +39,15 @@ class EjercicioController {
         }
     }
 
-    fun getEjercicioById(id: String): Ejercicio {
+    suspend fun getEjerciciosByUsuario(usuarioId: String): List<Ejercicio> {
+        try {
+            return dataManager.getEjerciciosByUsuario(usuarioId)
+        } catch (e: Exception) {
+            throw Exception(context.getString(R.string.ErrorMsgGetAll))
+        }
+    }
+
+    suspend fun getEjercicioById(id: String): Ejercicio {
         try {
             val result = dataManager.getEjercicioById(id)
             if (result == null) {
@@ -51,7 +59,7 @@ class EjercicioController {
         }
     }
 
-    fun deleteEjercicio(id: String) {
+    suspend fun deleteEjercicio(id: String) {
         try {
             dataManager.removeEjercicio(id)
         } catch (e: Exception) {

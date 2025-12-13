@@ -1,22 +1,24 @@
 package Api
 
 import Entity.User
-import retrofit2.Call
 import retrofit2.http.*
 
 interface UserApiService {
     @GET("users")
-    fun getAllUsers(): Call<ApiResponse<List<User>>>
+    suspend fun getAllUsers(): ApiResponse<List<User>>
 
     @GET("users/{id}")
-    fun getUserById(@Path("id") id: String): Call<ApiResponse<User>>
+    suspend fun getUserById(@Path("id") id: String): ApiResponse<User>
+
+    @GET("users/email/{email}")
+    suspend fun getUserByEmail(@Path("email") email: String): ApiResponse<User>
 
     @POST("users")
-    fun createUser(@Body user: User): Call<ApiResponse<User>>
+    suspend fun createUser(@Body user: User): ApiResponse<User>
 
     @PUT("users/{id}")
-    fun updateUser(@Path("id") id: String, @Body user: User): Call<ApiResponse<User>>
+    suspend fun updateUser(@Path("id") id: String, @Body user: User): ApiResponse<User>
 
     @DELETE("users/{id}")
-    fun deleteUser(@Path("id") id: String): Call<ApiResponse<User>>
+    suspend fun deleteUser(@Path("id") id: String): ApiResponse<User>
 }

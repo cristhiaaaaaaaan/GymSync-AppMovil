@@ -19,14 +19,16 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import Controller.FotoProgresoController
-import Controller.PersonController
+import Controller.UserController
 import Entity.FotoProgreso
+import Util.SessionManager
 import Util.Util
 
 class ProgressPhotoActivity : AppCompatActivity() {
 
+    private lateinit var sessionManager: SessionManager
     private lateinit var fotoProgresoController: FotoProgresoController
-    private lateinit var personController: PersonController
+    private lateinit var personController: UserController
 
     private lateinit var imgPhoto: ImageView
     private lateinit var editTextNote: EditText
@@ -90,8 +92,9 @@ class ProgressPhotoActivity : AppCompatActivity() {
     }
 
     private fun initControllers() {
+        sessionManager = SessionManager(this)
         fotoProgresoController = FotoProgresoController(this)
-        personController = PersonController(this)
+        personController = UserController(this)
     }
 
     private fun initViews() {
@@ -175,14 +178,13 @@ class ProgressPhotoActivity : AppCompatActivity() {
             return
         }
 
-        // Get the first user (for demo purposes)
-        val usuarios = personController.getUsuarios()
-        if (usuarios.isEmpty()) {
-            Toast.makeText(this, "No user found", Toast.LENGTH_SHORT).show()
+        // Get current user from session
+        val usuarioId = sessionManager.getUserId()
+        if (usuarioId == null) {
+            Toast.makeText(this, "No user found. Please login again.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val usuarioId = usuarios[0].Id
         val note = editTextNote.text.toString()
 
         // Create and save the progress photo with bitmap

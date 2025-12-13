@@ -3,31 +3,31 @@ package Data
 import Entity.*
 
 object MemoryDataManager: iDataManager {
-    private var usuarioList = mutableListOf<Person>()
-    private var rutinaList = mutableListOf<Province>()
+    private var usuarioList = mutableListOf<User>()
+    private var rutinaList = mutableListOf<Rutina>()
     private var ejercicioList = mutableListOf<Ejercicio>()
     private var registroAvanceList = mutableListOf<RegistroAvance>()
     private var fotoProgresoList = mutableListOf<FotoProgreso>()
     private var membresiaList = mutableListOf<Membresia>()
     private var logroList = mutableListOf<Logro>()
 
-    // Implementación para Usuario (Person)
-    override fun addUsuario(person: Person) {
-        usuarioList.add(person)
+    // Implementación para Usuario (User)
+    override suspend fun addUsuario(user: User) {
+        usuarioList.add(user)
     }
 
-    override fun removeUsuario(id: String) {
+    override suspend fun removeUsuario(id: String) {
         usuarioList.removeIf { it.Id.trim() == id.trim() }
     }
 
-    override fun updateUsuario(person: Person) {
-        removeUsuario(person.Id)
-        addUsuario(person)
+    override suspend fun updateUsuario(user: User) {
+        removeUsuario(user.Id)
+        addUsuario(user)
     }
 
-    override fun getAllUsuarios() = usuarioList
+    override suspend fun getAllUsuarios() = usuarioList
 
-    override fun getUsuarioById(id: String): Person? {
+    override suspend fun getUsuarioById(id: String): User? {
         try {
             val result = usuarioList.filter { it.Id.trim() == id.trim() }
             return if (result.any()) result[0] else null
@@ -36,23 +36,23 @@ object MemoryDataManager: iDataManager {
         }
     }
 
-    // Implementación para Rutina (Province)
-    override fun addRutina(rutina: Province) {
+    // Implementación para Rutina (Rutina)
+    override suspend fun addRutina(rutina: Rutina) {
         rutinaList.add(rutina)
     }
 
-    override fun removeRutina(id: String) {
+    override suspend fun removeRutina(id: String) {
         rutinaList.removeIf { it.Id.trim() == id.trim() }
     }
 
-    override fun updateRutina(rutina: Province) {
+    override suspend fun updateRutina(rutina: Rutina) {
         removeRutina(rutina.Id)
         addRutina(rutina)
     }
 
-    override fun getAllRutinas() = rutinaList
+    override suspend fun getAllRutinas() = rutinaList
 
-    override fun getRutinaById(id: String): Province? {
+    override suspend fun getRutinaById(id: String): Rutina? {
         try {
             val result = rutinaList.filter { it.Id.trim() == id.trim() }
             return if (result.any()) result[0] else null
@@ -61,7 +61,7 @@ object MemoryDataManager: iDataManager {
         }
     }
 
-    override fun getRutinasByUsuario(usuarioId: String): List<Province> {
+    override suspend fun getRutinasByUsuario(usuarioId: String): List<Rutina> {
         try {
             return rutinaList.filter { it.UsuarioId.trim() == usuarioId.trim() }
         } catch (e: Exception) {
@@ -70,22 +70,30 @@ object MemoryDataManager: iDataManager {
     }
 
     // Implementación para Ejercicio
-    override fun addEjercicio(ejercicio: Ejercicio) {
+    override suspend fun addEjercicio(ejercicio: Ejercicio) {
         ejercicioList.add(ejercicio)
     }
 
-    override fun removeEjercicio(id: String) {
+    override suspend fun removeEjercicio(id: String) {
         ejercicioList.removeIf { it.Id.trim() == id.trim() }
     }
 
-    override fun updateEjercicio(ejercicio: Ejercicio) {
+    override suspend fun updateEjercicio(ejercicio: Ejercicio) {
         removeEjercicio(ejercicio.Id)
         addEjercicio(ejercicio)
     }
 
-    override fun getAllEjercicios() = ejercicioList
+    override suspend fun getAllEjercicios() = ejercicioList
 
-    override fun getEjercicioById(id: String): Ejercicio? {
+    override suspend fun getEjerciciosByUsuario(usuarioId: String): List<Ejercicio> {
+        try {
+            return ejercicioList.filter { it.UsuarioId.trim() == usuarioId.trim() }
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    override suspend fun getEjercicioById(id: String): Ejercicio? {
         try {
             val result = ejercicioList.filter { it.Id.trim() == id.trim() }
             return if (result.any()) result[0] else null
@@ -95,22 +103,22 @@ object MemoryDataManager: iDataManager {
     }
 
     // Implementación para RegistroAvance
-    override fun addRegistroAvance(registro: RegistroAvance) {
+    override suspend fun addRegistroAvance(registro: RegistroAvance) {
         registroAvanceList.add(registro)
     }
 
-    override fun removeRegistroAvance(id: String) {
+    override suspend fun removeRegistroAvance(id: String) {
         registroAvanceList.removeIf { it.Id.trim() == id.trim() }
     }
 
-    override fun updateRegistroAvance(registro: RegistroAvance) {
+    override suspend fun updateRegistroAvance(registro: RegistroAvance) {
         removeRegistroAvance(registro.Id)
         addRegistroAvance(registro)
     }
 
-    override fun getAllRegistrosAvance() = registroAvanceList
+    override suspend fun getAllRegistrosAvance() = registroAvanceList
 
-    override fun getRegistroAvanceById(id: String): RegistroAvance? {
+    override suspend fun getRegistroAvanceById(id: String): RegistroAvance? {
         try {
             val result = registroAvanceList.filter { it.Id.trim() == id.trim() }
             return if (result.any()) result[0] else null
@@ -119,7 +127,7 @@ object MemoryDataManager: iDataManager {
         }
     }
 
-    override fun getRegistrosAvanceByUsuario(usuarioId: String): List<RegistroAvance> {
+    override suspend fun getRegistrosAvanceByUsuario(usuarioId: String): List<RegistroAvance> {
         try {
             return registroAvanceList.filter { it.UsuarioId.trim() == usuarioId.trim() }
         } catch (e: Exception) {
@@ -127,7 +135,7 @@ object MemoryDataManager: iDataManager {
         }
     }
 
-    override fun getRegistrosAvanceByEjercicio(ejercicioId: String): List<RegistroAvance> {
+    override suspend fun getRegistrosAvanceByEjercicio(ejercicioId: String): List<RegistroAvance> {
         try {
             return registroAvanceList.filter { it.EjercicioId.trim() == ejercicioId.trim() }
         } catch (e: Exception) {
@@ -169,22 +177,22 @@ object MemoryDataManager: iDataManager {
     }
 
     // Implementación para Membresia
-    override fun addMembresia(membresia: Membresia) {
+    override suspend fun addMembresia(membresia: Membresia) {
         membresiaList.add(membresia)
     }
 
-    override fun removeMembresia(id: String) {
+    override suspend fun removeMembresia(id: String) {
         membresiaList.removeIf { it.Id.trim() == id.trim() }
     }
 
-    override fun updateMembresia(membresia: Membresia) {
+    override suspend fun updateMembresia(membresia: Membresia) {
         removeMembresia(membresia.Id)
         addMembresia(membresia)
     }
 
-    override fun getAllMembresias() = membresiaList
+    override suspend fun getAllMembresias() = membresiaList
 
-    override fun getMembresiaById(id: String): Membresia? {
+    override suspend fun getMembresiaById(id: String): Membresia? {
         try {
             val result = membresiaList.filter { it.Id.trim() == id.trim() }
             return if (result.any()) result[0] else null
@@ -193,7 +201,7 @@ object MemoryDataManager: iDataManager {
         }
     }
 
-    override fun getMembresiaByUsuario(usuarioId: String): Membresia? {
+    override suspend fun getMembresiaByUsuario(usuarioId: String): Membresia? {
         try {
             val result = membresiaList.filter { it.UsuarioId.trim() == usuarioId.trim() }
             return if (result.any()) result[0] else null

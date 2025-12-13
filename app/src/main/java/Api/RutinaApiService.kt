@@ -1,22 +1,21 @@
 package Api
 
-import Entity.Province
-import retrofit2.Call
+import Entity.Rutina
 import retrofit2.http.*
 
 interface RutinaApiService {
     @GET("rutinas")
-    fun getAllRutinas(): Call<ApiResponse<List<Province>>>
+    suspend fun getAllRutinas(): ApiResponse<List<Rutina>>
 
     @GET("rutinas/{id}")
-    fun getRutinaById(@Path("id") id: String): Call<ApiResponse<Province>>
+    suspend fun getRutinaById(@Path("id") id: String): ApiResponse<Rutina>
 
     @POST("rutinas")
-    fun createRutina(@Body rutina: Province): Call<ApiResponse<Province>>
+    suspend fun createRutina(@Body rutina: Rutina): ApiResponse<Rutina>
 
     @PUT("rutinas/{id}")
-    fun updateRutina(@Path("id") id: String, @Body rutina: Province): Call<ApiResponse<Province>>
+    suspend fun updateRutina(@Path("id") id: String, @Body rutina: Rutina): ApiResponse<Rutina>
 
     @DELETE("rutinas/{id}")
-    fun deleteRutina(@Path("id") id: String): Call<ApiResponse<Province>>
+    suspend fun deleteRutina(@Path("id") id: String): ApiResponse<Rutina>
 }

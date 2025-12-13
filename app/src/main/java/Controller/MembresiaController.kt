@@ -15,7 +15,7 @@ class MembresiaController {
         this.context = context
     }
 
-    fun addMembresia(membresia: Membresia) {
+    suspend fun addMembresia(membresia: Membresia) {
         try {
             dataManager.addMembresia(membresia)
         } catch (e: Exception) {
@@ -23,7 +23,7 @@ class MembresiaController {
         }
     }
 
-    fun updateMembresia(membresia: Membresia) {
+    suspend fun updateMembresia(membresia: Membresia) {
         try {
             dataManager.updateMembresia(membresia)
         } catch (e: Exception) {
@@ -31,7 +31,7 @@ class MembresiaController {
         }
     }
 
-    fun getMembresias(): List<Membresia> {
+    suspend fun getMembresias(): List<Membresia> {
         try {
             return dataManager.getAllMembresias()
         } catch (e: Exception) {
@@ -39,7 +39,7 @@ class MembresiaController {
         }
     }
 
-    fun getMembresiaByUsuario(usuarioId: String): Membresia? {
+    suspend fun getMembresiaByUsuario(usuarioId: String): Membresia? {
         try {
             return dataManager.getMembresiaByUsuario(usuarioId)
         } catch (e: Exception) {
@@ -47,7 +47,7 @@ class MembresiaController {
         }
     }
 
-    fun verificarMembresiaActiva(usuarioId: String): Boolean {
+    suspend fun verificarMembresiaActiva(usuarioId: String): Boolean {
         try {
             val membresia = dataManager.getMembresiaByUsuario(usuarioId)
             return membresia?.Activa ?: false

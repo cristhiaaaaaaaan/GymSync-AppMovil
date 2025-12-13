@@ -6,181 +6,269 @@ import Entity.*
 object ApiDataManager : iDataManager {
 
     // Ejercicios
-    override fun getAllEjercicios(): List<Ejercicio> {
+    override suspend fun getAllEjercicios(): List<Ejercicio> {
         return try {
-            val response = RetrofitClient.ejercicioService.getAllEjercicios().execute()
-            if (response.isSuccessful) {
-                response.body()?.data ?: emptyList()
-            } else {
-                emptyList()
-            }
+            val response = RetrofitClient.ejercicioService.getAllEjercicios()
+            response.data ?: emptyList()
         } catch (e: Exception) {
             emptyList()
         }
     }
 
-    override fun getEjercicioById(id: String): Ejercicio? {
+    override suspend fun getEjerciciosByUsuario(usuarioId: String): List<Ejercicio> {
         return try {
-            val response = RetrofitClient.ejercicioService.getEjercicioById(id).execute()
-            if (response.isSuccessful) {
-                response.body()?.data
-            } else {
-                null
-            }
+            val response = RetrofitClient.ejercicioService.getAllEjercicios(usuarioId)
+            response.data ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override suspend fun getEjercicioById(id: String): Ejercicio? {
+        return try {
+            val response = RetrofitClient.ejercicioService.getEjercicioById(id)
+            response.data
         } catch (e: Exception) {
             null
         }
     }
 
-    override fun addEjercicio(ejercicio: Ejercicio) {
+    override suspend fun addEjercicio(ejercicio: Ejercicio) {
         try {
-            RetrofitClient.ejercicioService.createEjercicio(ejercicio).execute()
+            RetrofitClient.ejercicioService.createEjercicio(ejercicio)
         } catch (e: Exception) {
             e.printStackTrace()
+            throw e
         }
     }
 
-    override fun updateEjercicio(ejercicio: Ejercicio) {
+    override suspend fun updateEjercicio(ejercicio: Ejercicio) {
         try {
-            RetrofitClient.ejercicioService.updateEjercicio(ejercicio.Id, ejercicio).execute()
+            RetrofitClient.ejercicioService.updateEjercicio(ejercicio.Id, ejercicio)
         } catch (e: Exception) {
             e.printStackTrace()
+            throw e
         }
     }
 
-    override fun removeEjercicio(id: String) {
+    override suspend fun removeEjercicio(id: String) {
         try {
-            RetrofitClient.ejercicioService.deleteEjercicio(id).execute()
+            RetrofitClient.ejercicioService.deleteEjercicio(id)
         } catch (e: Exception) {
             e.printStackTrace()
+            throw e
         }
     }
 
     // Rutinas
-    override fun getAllRutinas(): List<Province> {
+    override suspend fun getAllRutinas(): List<Rutina> {
         return try {
-            val response = RetrofitClient.rutinaService.getAllRutinas().execute()
-            if (response.isSuccessful) {
-                response.body()?.data ?: emptyList()
-            } else {
-                emptyList()
-            }
+            val response = RetrofitClient.rutinaService.getAllRutinas()
+            response.data ?: emptyList()
         } catch (e: Exception) {
             emptyList()
         }
     }
 
-    override fun getRutinaById(id: String): Province? {
+    override suspend fun getRutinaById(id: String): Rutina? {
         return try {
-            val response = RetrofitClient.rutinaService.getRutinaById(id).execute()
-            if (response.isSuccessful) {
-                response.body()?.data
-            } else {
-                null
-            }
+            val response = RetrofitClient.rutinaService.getRutinaById(id)
+            response.data
         } catch (e: Exception) {
             null
         }
     }
 
-    override fun getRutinasByUsuario(usuarioId: String): List<Province> {
+    override suspend fun getRutinasByUsuario(usuarioId: String): List<Rutina> {
         return getAllRutinas().filter { it.UsuarioId == usuarioId }
     }
 
-    override fun addRutina(rutina: Province) {
+    override suspend fun addRutina(rutina: Rutina) {
         try {
-            RetrofitClient.rutinaService.createRutina(rutina).execute()
+            RetrofitClient.rutinaService.createRutina(rutina)
         } catch (e: Exception) {
             e.printStackTrace()
+            throw e
         }
     }
 
-    override fun updateRutina(rutina: Province) {
+    override suspend fun updateRutina(rutina: Rutina) {
         try {
-            RetrofitClient.rutinaService.updateRutina(rutina.Id, rutina).execute()
+            RetrofitClient.rutinaService.updateRutina(rutina.Id, rutina)
         } catch (e: Exception) {
             e.printStackTrace()
+            throw e
         }
     }
 
-    override fun removeRutina(id: String) {
+    override suspend fun removeRutina(id: String) {
         try {
-            RetrofitClient.rutinaService.deleteRutina(id).execute()
+            RetrofitClient.rutinaService.deleteRutina(id)
         } catch (e: Exception) {
             e.printStackTrace()
+            throw e
         }
     }
 
     // Membresias
-    override fun getAllMembresias(): List<Membresia> {
+    override suspend fun getAllMembresias(): List<Membresia> {
         return try {
-            val response = RetrofitClient.membresiaService.getAllMembresias().execute()
-            if (response.isSuccessful) {
-                response.body()?.data ?: emptyList()
-            } else {
-                emptyList()
-            }
+            val response = RetrofitClient.membresiaService.getAllMembresias()
+            response.data ?: emptyList()
         } catch (e: Exception) {
             emptyList()
         }
     }
 
-    override fun getMembresiaById(id: String): Membresia? {
+    override suspend fun getMembresiaById(id: String): Membresia? {
         return try {
-            val response = RetrofitClient.membresiaService.getMembresiaById(id).execute()
-            if (response.isSuccessful) {
-                response.body()?.data
-            } else {
-                null
-            }
+            val response = RetrofitClient.membresiaService.getMembresiaById(id)
+            response.data
         } catch (e: Exception) {
             null
         }
     }
 
-    override fun getMembresiaByUsuario(usuarioId: String): Membresia? {
+    override suspend fun getMembresiaByUsuario(usuarioId: String): Membresia? {
         return getAllMembresias().firstOrNull { it.UsuarioId == usuarioId }
     }
 
-    override fun addMembresia(membresia: Membresia) {
+    override suspend fun addMembresia(membresia: Membresia) {
         try {
-            RetrofitClient.membresiaService.createMembresia(membresia).execute()
+            RetrofitClient.membresiaService.createMembresia(membresia)
         } catch (e: Exception) {
             e.printStackTrace()
+            throw e
         }
     }
 
-    override fun updateMembresia(membresia: Membresia) {
+    override suspend fun updateMembresia(membresia: Membresia) {
         try {
-            RetrofitClient.membresiaService.updateMembresia(membresia.Id, membresia).execute()
+            RetrofitClient.membresiaService.updateMembresia(membresia.Id, membresia)
         } catch (e: Exception) {
             e.printStackTrace()
+            throw e
         }
     }
 
-    override fun removeMembresia(id: String) {
+    override suspend fun removeMembresia(id: String) {
         try {
-            RetrofitClient.membresiaService.deleteMembresia(id).execute()
+            RetrofitClient.membresiaService.deleteMembresia(id)
         } catch (e: Exception) {
             e.printStackTrace()
+            throw e
         }
     }
 
-    // Usuarios - usar memoria local por ahora
-    override fun addUsuario(person: Person) { MemoryDataManager.addUsuario(person) }
-    override fun updateUsuario(person: Person) { MemoryDataManager.updateUsuario(person) }
-    override fun removeUsuario(id: String) { MemoryDataManager.removeUsuario(id) }
-    override fun getAllUsuarios(): List<Person> = MemoryDataManager.getAllUsuarios()
-    override fun getUsuarioById(id: String): Person? = MemoryDataManager.getUsuarioById(id)
+    // Usuarios - usar API
+    override suspend fun getAllUsuarios(): List<User> {
+        return try {
+            val response = RetrofitClient.userService.getAllUsers()
+            response.data ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
 
-    // RegistroAvance - usar memoria local por ahora
-    override fun addRegistroAvance(registro: RegistroAvance) { MemoryDataManager.addRegistroAvance(registro) }
-    override fun updateRegistroAvance(registro: RegistroAvance) { MemoryDataManager.updateRegistroAvance(registro) }
-    override fun removeRegistroAvance(id: String) { MemoryDataManager.removeRegistroAvance(id) }
-    override fun getAllRegistrosAvance(): List<RegistroAvance> = MemoryDataManager.getAllRegistrosAvance()
-    override fun getRegistroAvanceById(id: String): RegistroAvance? = MemoryDataManager.getRegistroAvanceById(id)
-    override fun getRegistrosAvanceByUsuario(usuarioId: String): List<RegistroAvance> = MemoryDataManager.getRegistrosAvanceByUsuario(usuarioId)
-    override fun getRegistrosAvanceByEjercicio(ejercicioId: String): List<RegistroAvance> = MemoryDataManager.getRegistrosAvanceByEjercicio(ejercicioId)
+    override suspend fun getUsuarioById(id: String): User? {
+        return try {
+            val response = RetrofitClient.userService.getUserById(id)
+            response.data
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    override suspend fun addUsuario(user: User) {
+        try {
+            RetrofitClient.userService.createUser(user)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
+
+    override suspend fun updateUsuario(user: User) {
+        try {
+            RetrofitClient.userService.updateUser(user.Id, user)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
+
+    override suspend fun removeUsuario(id: String) {
+        try {
+            RetrofitClient.userService.deleteUser(id)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
+
+    // RegistroAvance - usar API
+    override suspend fun addRegistroAvance(registro: RegistroAvance) {
+        try {
+            RetrofitClient.registroAvanceService.createRegistro(registro)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
+
+    override suspend fun updateRegistroAvance(registro: RegistroAvance) {
+        try {
+            RetrofitClient.registroAvanceService.updateRegistro(registro.Id, registro)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
+
+    override suspend fun removeRegistroAvance(id: String) {
+        try {
+            RetrofitClient.registroAvanceService.deleteRegistro(id)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
+
+    override suspend fun getAllRegistrosAvance(): List<RegistroAvance> {
+        return try {
+            val response = RetrofitClient.registroAvanceService.getAllRegistros()
+            response.data ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override suspend fun getRegistroAvanceById(id: String): RegistroAvance? {
+        return try {
+            val response = RetrofitClient.registroAvanceService.getRegistroById(id)
+            response.data
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    override suspend fun getRegistrosAvanceByUsuario(usuarioId: String): List<RegistroAvance> {
+        return try {
+            val response = RetrofitClient.registroAvanceService.getAllRegistros(usuarioId = usuarioId)
+            response.data ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override suspend fun getRegistrosAvanceByEjercicio(ejercicioId: String): List<RegistroAvance> {
+        return try {
+            val response = RetrofitClient.registroAvanceService.getAllRegistros(ejercicioId = ejercicioId)
+            response.data ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
 
     // FotoProgreso - usar memoria local por ahora
     override fun addFotoProgreso(foto: FotoProgreso) { MemoryDataManager.addFotoProgreso(foto) }
