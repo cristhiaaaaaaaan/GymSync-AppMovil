@@ -2,7 +2,7 @@ package Controller
 
 import Data.ApiDataManager
 import Data.iDataManager
-import Entity.Province
+import Entity.Rutina
 import android.content.Context
 import cr.ac.utn.census.R
 
@@ -15,7 +15,7 @@ class RutinaController {
         this.context = context
     }
 
-    fun addRutina(rutina: Province) {
+    suspend fun addRutina(rutina: Rutina) {
         try {
             dataManager.addRutina(rutina)
         } catch (e: Exception) {
@@ -23,7 +23,7 @@ class RutinaController {
         }
     }
 
-    fun updateRutina(rutina: Province) {
+    suspend fun updateRutina(rutina: Rutina) {
         try {
             dataManager.updateRutina(rutina)
         } catch (e: Exception) {
@@ -31,7 +31,7 @@ class RutinaController {
         }
     }
 
-    fun getRutinas(): List<Province> {
+    suspend fun getRutinas(): List<Rutina> {
         try {
             return dataManager.getAllRutinas()
         } catch (e: Exception) {
@@ -39,7 +39,7 @@ class RutinaController {
         }
     }
 
-    fun getRutinaById(id: String): Province {
+    suspend fun getRutinaById(id: String): Rutina {
         try {
             val result = dataManager.getRutinaById(id)
             if (result == null) {
@@ -51,7 +51,7 @@ class RutinaController {
         }
     }
 
-    fun getRutinasByUsuario(usuarioId: String): List<Province> {
+    suspend fun getRutinasByUsuario(usuarioId: String): List<Rutina> {
         try {
             return dataManager.getRutinasByUsuario(usuarioId)
         } catch (e: Exception) {
@@ -59,7 +59,7 @@ class RutinaController {
         }
     }
 
-    fun marcarRutinaCompletada(rutinaId: String) {
+    suspend fun marcarRutinaCompletada(rutinaId: String) {
         try {
             val rutina = getRutinaById(rutinaId)
             rutina.Completada = true

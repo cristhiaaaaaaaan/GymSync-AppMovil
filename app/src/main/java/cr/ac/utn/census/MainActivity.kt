@@ -3,19 +3,27 @@ package cr.ac.utn.census
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import Controller.*
 import Entity.*
+import Util.SessionManager
 import Util.Util
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Date
 
 class MainActivity : AppCompatActivity() {
 
     // Controladores
-    private lateinit var usuarioController: PersonController
+    private lateinit var sessionManager: SessionManager
+    private lateinit var usuarioController: UserController
     private lateinit var rutinaController: RutinaController
     private lateinit var ejercicioController: EjercicioController
     private lateinit var registroAvanceController: RegistroAvanceController
@@ -25,6 +33,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Initialize SessionManager first
+        sessionManager = SessionManager(this)
+
+        // Check if user is logged in
+        if (!sessionManager.isLoggedIn()) {
+            navigateToLoginActivity()
+            return
+        }
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -36,11 +54,27 @@ class MainActivity : AppCompatActivity() {
         // Inicializar controladores
         initControllers()
 
-        // Cargar datos de prueba
-        loadTestData()
+        // Update welcome text with user name
+        updateWelcomeText()
+
+        // Cargar datos de prueba solo si es necesario
+        loadTestDataIfNeeded()
 
         // Setup navigation buttons
         setupNavigationButtons()
+    }
+
+    private fun navigateToLoginActivity() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+
+    private fun updateWelcomeText() {
+        val textViewWelcome = findViewById<TextView>(R.id.textViewWelcome)
+        val userName = sessionManager.getUserName() ?: "User"
+        textViewWelcome.text = "Welcome to GymSync, $userName!"
     }
 
     private fun setupNavigationButtons() {
@@ -64,10 +98,49 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ProgressPhotoListActivity::class.java)
             startActivity(intent)
         }
+
+        // My Workout Plan button
+        val buttonMyWorkout = findViewById<Button>(R.id.buttonMyWorkout)
+        buttonMyWorkout.setOnClickListener {
+            val intent = Intent(this, WorkoutActivity::class.java)
+            startActivity(intent)
+        }
+
+        // My Profile & Membership button
+        val buttonMyProfile = findViewById<Button>(R.id.buttonMyProfile)
+        buttonMyProfile.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Logout button
+        val buttonLogout = findViewById<Button>(R.id.buttonLogout)
+        buttonLogout.setOnClickListener {
+            showLogoutConfirmation()
+        }
+    }
+
+    private fun showLogoutConfirmation() {
+        AlertDialog.Builder(this)
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton("Yes") { dialog, _ ->
+                performLogout()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun performLogout() {
+        sessionManager.logout()
+        navigateToLoginActivity()
     }
 
     private fun initControllers() {
-        usuarioController = PersonController(this)
+        usuarioController = UserController(this)
         rutinaController = RutinaController(this)
         ejercicioController = EjercicioController(this)
         registroAvanceController = RegistroAvanceController(this)
@@ -76,108 +149,147 @@ class MainActivity : AppCompatActivity() {
         logroController = LogroController(this)
     }
 
-    private fun loadTestData() {
-        // Crear usuario de prueba
-        val usuario = Person(
-            id = Util.generateId(),
-            name = "Juan Pérez",
-            email = "juan.perez@gymsync.com",
-            fotoPerfil = "https://example.com/foto.jpg",
-            fechaRegistro = Util.getCurrentDate()
-        )
-        usuarioController.addUsuario(usuario)
+    private fun loadTestDataIfNeeded() {
+        lifecycleScope.launch {
+            try {
+                // Only load test data if there are no users yet (first time setup)
+                val usuarios = withContext(Dispatchers.IO) {
+                    usuarioController.getUsuarios()
+                }
 
-        // Crear ejercicios de prueba
-        val ejercicio1 = Ejercicio(
-            id = Util.generateId(),
-            nombre = "Press de Banca",
-            series = 4,
-            repeticiones = 12,
-            pesoRecomendado = 60.0,
-            notas = "Ejercicio para pecho"
-        )
-        ejercicioController.addEjercicio(ejercicio1)
+                // If user is logged in, get their user object
+                val userId = sessionManager.getUserId()
+                val currentUser = usuarios.firstOrNull { it.Id == userId }
 
-        val ejercicio2 = Ejercicio(
-            id = Util.generateId(),
-            nombre = "Sentadillas",
-            series = 4,
-            repeticiones = 15,
-            pesoRecomendado = 80.0,
-            notas = "Ejercicio para piernas"
-        )
-        ejercicioController.addEjercicio(ejercicio2)
+                if (currentUser == null && userId != null) {
+                    // User session exists but user data doesn't - recreate from session
+                    val usuario = User(
+                        Id = userId,
+                        Name = sessionManager.getUserName() ?: "User",
+                        Email = sessionManager.getUserEmail() ?: "user@gymsync.com",
+                        FotoPerfil = "",
+                        FechaRegistro = Util.getCurrentDateString()
+                    )
+                    withContext(Dispatchers.IO) {
+                        usuarioController.addUsuario(usuario)
+                    }
+                    loadExampleDataForUser(usuario)
+                    return@launch
+                }
 
-        val ejercicio3 = Ejercicio(
-            id = Util.generateId(),
-            nombre = "Peso Muerto",
-            series = 3,
-            repeticiones = 10,
-            pesoRecomendado = 100.0,
-            notas = "Ejercicio para espalda baja"
-        )
-        ejercicioController.addEjercicio(ejercicio3)
+                if (currentUser != null && usuarios.size == 1) {
+                    // This is a new user, load example data
+                    loadExampleDataForUser(currentUser)
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("MainActivity", "Error loading test data", e)
+            }
+        }
+    }
 
-        // Crear rutina de prueba
-        val rutina = Province(
-            id = Util.generateId(),
-            usuarioId = usuario.Id,
-            fecha = Util.getCurrentDate(),
-            nombre = "Rutina de Fuerza",
-            ejercicios = mutableListOf(ejercicio1.Id, ejercicio2.Id, ejercicio3.Id),
-            completada = false
-        )
-        rutinaController.addRutina(rutina)
+    private fun loadExampleDataForUser(usuario: User) {
+        lifecycleScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    // Crear ejercicios de prueba
+                    val ejercicio1 = Ejercicio(
+                        Id = Util.generateId(),
+                        Nombre = "Press de Banca",
+                        Series = 4,
+                        Repeticiones = 12,
+                        PesoRecomendado = 60,
+                        Notas = "Ejercicio para pecho"
+                    )
+                    ejercicioController.addEjercicio(ejercicio1)
 
-        // Crear membresía de prueba
-        val fechaInicio = Util.getCurrentDate()
-        val calendar = java.util.Calendar.getInstance()
-        calendar.time = fechaInicio
-        calendar.add(java.util.Calendar.MONTH, 1)
-        val fechaVencimiento = calendar.time
+                    val ejercicio2 = Ejercicio(
+                        Id = Util.generateId(),
+                        Nombre = "Sentadillas",
+                        Series = 4,
+                        Repeticiones = 15,
+                        PesoRecomendado = 80,
+                        Notas = "Ejercicio para piernas"
+                    )
+                    ejercicioController.addEjercicio(ejercicio2)
 
-        val membresia = Membresia(
-            id = Util.generateId(),
-            usuarioId = usuario.Id,
-            tipo = "Premium",
-            fechaInicio = fechaInicio,
-            fechaVencimiento = fechaVencimiento,
-            activa = true,
-            monto = 50000.0
-        )
-        membresiaController.addMembresia(membresia)
+                    val ejercicio3 = Ejercicio(
+                        Id = Util.generateId(),
+                        Nombre = "Peso Muerto",
+                        Series = 3,
+                        Repeticiones = 10,
+                        PesoRecomendado = 100,
+                        Notas = "Ejercicio para espalda baja"
+                    )
+                    ejercicioController.addEjercicio(ejercicio3)
 
-        // Crear registro de avance de prueba
-        val registroAvance = RegistroAvance(
-            id = Util.generateId(),
-            ejercicioId = ejercicio1.Id,
-            usuarioId = usuario.Id,
-            fecha = Util.getCurrentDate(),
-            pesoUtilizado = 55.0,
-            repeticionesRealizadas = 12,
-            seriesCompletadas = 4
-        )
-        registroAvanceController.addRegistroAvance(registroAvance)
+                    // Crear rutina de prueba
+                    val rutina = Rutina(
+                        Id = Util.generateId(),
+                        UsuarioId = usuario.Id,
+                        Fecha = Util.getCurrentDateString(),
+                        Nombre = "Rutina de Fuerza",
+                        Ejercicios = listOf(ejercicio1.Id, ejercicio2.Id, ejercicio3.Id),
+                        Completada = false
+                    )
+                    rutinaController.addRutina(rutina)
 
-        // Create test progress photo (with null bitmap for now)
-        val fotoProgreso = FotoProgreso(
-            id = Util.generateId(),
-            usuarioId = usuario.Id,
-            fecha = Util.getCurrentDate(),
-            photo = null,
-            nota = "First progress photo"
-        )
-        fotoProgresoController.addFotoProgreso(fotoProgreso)
+                    // Crear membresía de prueba
+                    val fechaInicio = Util.getCurrentDate()
+                    val calendar = java.util.Calendar.getInstance()
+                    calendar.time = fechaInicio
+                    calendar.add(java.util.Calendar.MONTH, 1)
+                    val fechaVencimiento = calendar.time
 
-        // Crear logro de prueba
-        val logro = Logro(
-            id = Util.generateId(),
-            usuarioId = usuario.Id,
-            titulo = "Primera Rutina",
-            descripcion = "Completaste tu primera rutina en GymSync",
-            fecha = Util.getCurrentDate(),
-            icono = "trophy"
-        )
-        logroController.addLogro(logro)
+                    val membresia = Membresia(
+                        Id = Util.generateId(),
+                        UsuarioId = usuario.Id,
+                        Tipo = "Premium",
+                        FechaInicio = fechaInicio,
+                        FechaVencimiento = fechaVencimiento,
+                        Activa = true,
+                        Monto = 50000
+                    )
+                    membresiaController.addMembresia(membresia)
+
+                    // Crear registro de avance de prueba
+                    val registroAvance = RegistroAvance(
+                        Id = Util.generateId(),
+                        EjercicioId = ejercicio1.Id,
+                        UsuarioId = usuario.Id,
+                        Fecha = Util.getCurrentDateString(),
+                        PesoUtilizado = 55.0,
+                        RepeticionesRealizadas = 12,
+                        SeriesCompletadas = 4,
+                        Notas = "Registro de prueba"
+                    )
+                    withContext(Dispatchers.IO) {
+                        registroAvanceController.addRegistroAvance(registroAvance)
+                    }
+
+                    // Create test progress photo (with null bitmap for now)
+                    val fotoProgreso = FotoProgreso(
+                        id = Util.generateId(),
+                        usuarioId = usuario.Id,
+                        fecha = Util.getCurrentDate(),
+                        photo = null,
+                        nota = "First progress photo"
+                    )
+                    fotoProgresoController.addFotoProgreso(fotoProgreso)
+
+                    // Crear logro de prueba
+                    val logro = Logro(
+                        id = Util.generateId(),
+                        usuarioId = usuario.Id,
+                        titulo = "Primera Rutina",
+                        descripcion = "Completaste tu primera rutina en GymSync",
+                        fecha = Util.getCurrentDate(),
+                        icono = "trophy"
+                    )
+                    logroController.addLogro(logro)
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("MainActivity", "Error loading example data", e)
+            }
+        }
     }
 }

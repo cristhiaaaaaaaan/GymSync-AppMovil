@@ -1,21 +1,21 @@
 package Controller
 
-import Data.MemoryDataManager
+import Data.ApiDataManager
 import Data.iDataManager
-import Entity.Person
+import Entity.User
 import android.content.Context
 import cr.ac.utn.census.R
 
-class PersonController {
+class UserController {
 
-    private var dataManager: iDataManager = MemoryDataManager
+    private var dataManager: iDataManager = ApiDataManager
     private var context: Context
 
     constructor(context: Context) {
         this.context = context
     }
 
-    fun addUsuario(usuario: Person) {
+    suspend fun addUsuario(usuario: User) {
         try {
             dataManager.addUsuario(usuario)
         } catch (e: Exception) {
@@ -23,7 +23,7 @@ class PersonController {
         }
     }
 
-    fun updateUsuario(usuario: Person) {
+    suspend fun updateUsuario(usuario: User) {
         try {
             dataManager.updateUsuario(usuario)
         } catch (e: Exception) {
@@ -31,7 +31,7 @@ class PersonController {
         }
     }
 
-    fun getUsuarios(): List<Person> {
+    suspend fun getUsuarios(): List<User> {
         try {
             return dataManager.getAllUsuarios()
         } catch (e: Exception) {
@@ -39,7 +39,7 @@ class PersonController {
         }
     }
 
-    fun getUsuarioById(id: String): Person {
+    suspend fun getUsuarioById(id: String): User {
         try {
             val result = dataManager.getUsuarioById(id)
             if (result == null) {

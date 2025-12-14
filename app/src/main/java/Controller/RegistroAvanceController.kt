@@ -1,6 +1,6 @@
 package Controller
 
-import Data.MemoryDataManager
+import Data.ApiDataManager
 import Data.iDataManager
 import Entity.RegistroAvance
 import android.content.Context
@@ -8,14 +8,14 @@ import cr.ac.utn.census.R
 
 class RegistroAvanceController {
 
-    private var dataManager: iDataManager = MemoryDataManager
+    private var dataManager: iDataManager = ApiDataManager
     private var context: Context
 
     constructor(context: Context) {
         this.context = context
     }
 
-    fun addRegistroAvance(registro: RegistroAvance) {
+    suspend fun addRegistroAvance(registro: RegistroAvance) {
         try {
             dataManager.addRegistroAvance(registro)
         } catch (e: Exception) {
@@ -23,7 +23,7 @@ class RegistroAvanceController {
         }
     }
 
-    fun updateRegistroAvance(registro: RegistroAvance) {
+    suspend fun updateRegistroAvance(registro: RegistroAvance) {
         try {
             dataManager.updateRegistroAvance(registro)
         } catch (e: Exception) {
@@ -31,7 +31,7 @@ class RegistroAvanceController {
         }
     }
 
-    fun getRegistrosAvance(): List<RegistroAvance> {
+    suspend fun getRegistrosAvance(): List<RegistroAvance> {
         try {
             return dataManager.getAllRegistrosAvance()
         } catch (e: Exception) {
@@ -39,7 +39,7 @@ class RegistroAvanceController {
         }
     }
 
-    fun getRegistrosAvanceByUsuario(usuarioId: String): List<RegistroAvance> {
+    suspend fun getRegistrosAvanceByUsuario(usuarioId: String): List<RegistroAvance> {
         try {
             return dataManager.getRegistrosAvanceByUsuario(usuarioId)
         } catch (e: Exception) {
@@ -47,7 +47,7 @@ class RegistroAvanceController {
         }
     }
 
-    fun getRegistrosAvanceByEjercicio(ejercicioId: String): List<RegistroAvance> {
+    suspend fun getRegistrosAvanceByEjercicio(ejercicioId: String): List<RegistroAvance> {
         try {
             return dataManager.getRegistrosAvanceByEjercicio(ejercicioId)
         } catch (e: Exception) {

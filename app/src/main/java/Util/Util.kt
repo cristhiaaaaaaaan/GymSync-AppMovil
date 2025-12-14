@@ -76,6 +76,18 @@ class Util {
             return Date()
         }
 
+        // Convertir Date a String en formato ISO para la API
+        fun dateToISOString(date: Date): String {
+            val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+            formatter.timeZone = TimeZone.getTimeZone("UTC")
+            return formatter.format(date)
+        }
+
+        // Obtener fecha actual como String en formato ISO para la API
+        fun getCurrentDateString(): String {
+            return dateToISOString(Date())
+        }
+
         // Calcular IMC (Índice de Masa Corporal) - útil para tracking de progreso
         fun calcularIMC(peso: Double, altura: Double): Double {
             if (altura == 0.0) return 0.0

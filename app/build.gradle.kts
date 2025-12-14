@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "cr.ac.utn.census"
-        minSdk = 34
+        minSdk = 29
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -50,6 +50,10 @@ dependencies {
 
     // OkHttp for logging
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+    // Kotlin Coroutines for background threading
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

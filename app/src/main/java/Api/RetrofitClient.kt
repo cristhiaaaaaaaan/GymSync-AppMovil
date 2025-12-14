@@ -22,7 +22,10 @@ object RetrofitClient {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
+    val authService: AuthApiService = retrofit.create(AuthApiService::class.java)
+    val userService: UserApiService = retrofit.create(UserApiService::class.java)
     val ejercicioService: EjercicioApiService = retrofit.create(EjercicioApiService::class.java)
     val rutinaService: RutinaApiService = retrofit.create(RutinaApiService::class.java)
     val membresiaService: MembresiaApiService = retrofit.create(MembresiaApiService::class.java)
+    val registroAvanceService: RegistroAvanceApiService = retrofit.create(RegistroAvanceApiService::class.java)
 }

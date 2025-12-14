@@ -2,6 +2,7 @@ package cr.ac.utn.census
 
 import Controller.EjercicioController
 import Entity.Ejercicio
+import Util.SessionManager
 import Util.Util
 import android.os.Bundle
 import android.text.Editable
@@ -11,16 +12,21 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import android.view.View
 import android.widget.TextView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ExerciseCrudActivity : AppCompatActivity() {
 
     private lateinit var exerciseController: EjercicioController
+    private lateinit var sessionManager: SessionManager
     private lateinit var exerciseAdapter: ExerciseAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var editTextSearch: EditText
@@ -31,8 +37,9 @@ class ExerciseCrudActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_exercise_crud)
 
-        // Initialize controller
+        // Initialize controller and session
         exerciseController = EjercicioController(this)
+        sessionManager = SessionManager(this)
 
         // Initialize views
         initViews()
@@ -87,12 +94,22 @@ class ExerciseCrudActivity : AppCompatActivity() {
     }
 
     private fun loadExercises() {
-        try {
-            val exercises = exerciseController.getEjercicios()
-            exerciseAdapter.updateExercises(exercises)
-            updateEmptyState()
-        } catch (e: Exception) {
-            Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+        val userId = sessionManager.getUserId()
+        if (userId == null) {
+            Toast.makeText(this, "No user session found", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        lifecycleScope.launch {
+            try {
+                val exercises = withContext(Dispatchers.IO) {
+                    exerciseController.getEjerciciosByUsuario(userId)
+                }
+                exerciseAdapter.updateExercises(exercises)
+                updateEmptyState()
+            } catch (e: Exception) {
+                Toast.makeText(this@ExerciseCrudActivity, e.message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -125,25 +142,36 @@ class ExerciseCrudActivity : AppCompatActivity() {
                 val notes = editTextNotes.text.toString().trim()
 
                 if (validateInput(name, setsStr, repsStr, weightStr)) {
+                    val userId = sessionManager.getUserId()
+                    if (userId == null) {
+                        Toast.makeText(this@ExerciseCrudActivity, "No user session found", Toast.LENGTH_SHORT).show()
+                        return@setPositiveButton
+                    }
+
                     val exercise = Ejercicio(
-                        id = Util.generateId(),
-                        nombre = name,
-                        series = setsStr.toInt(),
-                        repeticiones = repsStr.toInt(),
-                        pesoRecomendado = weightStr.toDouble(),
-                        notas = notes
+                        Id = Util.generateId(),
+                        Nombre = name,
+                        Series = setsStr.toInt(),
+                        Repeticiones = repsStr.toInt(),
+                        PesoRecomendado = weightStr.toInt(),
+                        Notas = notes,
+                        UsuarioId = userId
                     )
 
-                    try {
-                        exerciseController.addEjercicio(exercise)
-                        loadExercises()
-                        Toast.makeText(
-                            this,
-                            R.string.exercise_added_successfully,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } catch (e: Exception) {
-                        Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+                    lifecycleScope.launch {
+                        try {
+                            withContext(Dispatchers.IO) {
+                                exerciseController.addEjercicio(exercise)
+                            }
+                            loadExercises()
+                            Toast.makeText(
+                                this@ExerciseCrudActivity,
+                                R.string.exercise_added_successfully,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } catch (e: Exception) {
+                            Toast.makeText(this@ExerciseCrudActivity, e.message, Toast.LENGTH_SHORT).show()
+                        }
                     }
                 } else {
                     Toast.makeText(
@@ -218,19 +246,23 @@ class ExerciseCrudActivity : AppCompatActivity() {
                 exercise.Nombre = name
                 exercise.Series = setsStr.toInt()
                 exercise.Repeticiones = repsStr.toInt()
-                exercise.PesoRecomendado = weightStr.toDouble()
+                exercise.PesoRecomendado = weightStr.toInt()
                 exercise.Notas = notes
 
-                try {
-                    exerciseController.updateEjercicio(exercise)
-                    loadExercises()
-                    Toast.makeText(
-                        this,
-                        R.string.exercise_updated_successfully,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } catch (e: Exception) {
-                    Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+                lifecycleScope.launch {
+                    try {
+                        withContext(Dispatchers.IO) {
+                            exerciseController.updateEjercicio(exercise)
+                        }
+                        loadExercises()
+                        Toast.makeText(
+                            this@ExerciseCrudActivity,
+                            R.string.exercise_updated_successfully,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } catch (e: Exception) {
+                        Toast.makeText(this@ExerciseCrudActivity, e.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
                 dialog.dismiss()
             }
@@ -245,16 +277,20 @@ class ExerciseCrudActivity : AppCompatActivity() {
             .setTitle(R.string.dialog_delete_exercise_title)
             .setMessage(R.string.dialog_delete_exercise_message)
             .setPositiveButton(R.string.dialog_delete) { dialog, _ ->
-                try {
-                    exerciseController.deleteEjercicio(exercise.Id)
-                    loadExercises()
-                    Toast.makeText(
-                        this,
-                        R.string.exercise_deleted_successfully,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } catch (e: Exception) {
-                    Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+                lifecycleScope.launch {
+                    try {
+                        withContext(Dispatchers.IO) {
+                            exerciseController.deleteEjercicio(exercise.Id)
+                        }
+                        loadExercises()
+                        Toast.makeText(
+                            this@ExerciseCrudActivity,
+                            R.string.exercise_deleted_successfully,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } catch (e: Exception) {
+                        Toast.makeText(this@ExerciseCrudActivity, e.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
                 dialog.dismiss()
             }
